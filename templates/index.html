@@ -1,0 +1,299 @@
+<HTML>
+    <HEADE>
+        <title>Calculadora de currados</title>
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+ 
+    </HEADE>
+    <BODY>
+        <center>
+        <p><h1>Calculo de churrasco</h1></p><br><br>
+        <p>Entre com os dados do evento</p>
+
+
+        <table with=400 cellspace=2 cellpadding=2 border=0>
+            <tr>
+                <td colspan="6">
+                    CEP(números): <input type='text' style="width: 100px;" id="txtCEP"> <img id="imgcep" width="15" height="15" src="../static/img/transp.png">&nbsp;<span style="color: red;" id="spErrorCep" />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="6">
+                    CPF(números): <input type='text' style="width: 200px;" id="txtCPF"> <img id="imgcpf" width="15" height="15"src="../static/img/transp.png">&nbsp;<span style="color: red;" id="spErrorCpf" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Homens
+                </td>
+                <td>
+                    Mulheres
+                </td>
+                <td>
+                    Crianças
+                </td>
+                <td>
+                    Tempo de Festa
+                </td>
+                <td>
+                    Bebidas alcoolicas
+                </td>
+                <td>
+                    <input type='button' value='Calcular' id="btnCalc" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type='text' style="width: 30px;" id="txtMen" />
+                </td>
+                <td>
+                    <input type='text' style="width: 30px;" id="txtWomen" />
+                </td>
+                <td>
+                    <input type='text' style="width: 30px;" id="txtChildren" />
+                </td>
+                <td>
+                    <input type='text' style="width: 30px;" id="txtTime" />
+                </td>
+                <td>
+                    <select id="drpDrinks" name="drpDrinks">
+                        <option value="true">Sim</option>
+                        <option value="false">Não</option>
+                    </select>
+                </td>
+
+            </tr>
+        </table>
+        <br><br>
+        <table with=500 cellspace=2 cellpadding=2 border=1 id="tbResult" style="display:none;">
+            <tr>
+                <td colspan="4">
+                    Resultado
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Convidados: 
+                </td>
+                <td>
+                    <span id="vlConv" />
+                </td>
+                <td>
+                    Carne Bovina:
+                </td>
+                <td>
+                    <span id="vlCarne" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Refrigerantes: 
+                </td>
+                <td>
+                    <span id="vlRef" />
+                </td>
+                <td>
+                    Carne Frango:
+                </td>
+                <td>
+                    <span id="vlFrango" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Cervejas: 
+                </td>
+                <td>
+                    <span id="vlCerv" />
+                </td>
+                <td>
+                    Carne Frango:
+                </td>
+                <td>
+                    <span id="vlProco" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                     
+                </td>
+                <td>
+                    
+                </td>
+                <td>
+                    Linguiças:
+                </td>
+                <td>
+                    <span id="vlLing" />
+                </td>
+            </tr>
+        </table>
+
+
+
+        </center>
+        <script>
+            var cepOK = false;
+            var cpfOK = false;
+            $('#btnCalc').prop('disabled', true);
+
+            $("#txtCEP").blur(function(){
+                var link ="https://anapaulabim.pythonanywhere.com/zip/"+$(this).val();
+                //alert(link);
+                $.get(link, function(data, status){
+                    //alert("Data: " + data.situacao + "\nStatus: " + status);
+                    if (status == "success") {
+                        //alert($("#imgcep").src);
+                        $('#spErrorCep').text("");
+                        $("#imgcep").attr('src', "../static/img/suss.jpg");
+                        cepOK = true; 
+                        if (cepOK && cpfOK) {
+                            alert(1);
+                            $('#btnCalc').removeAttr("disabled");
+                        }
+                    }
+                    }).fail(function(xhr, status, error) {
+                        //alert("Data: " + xhr.responseJSON.situacao + "\nStatus: " + status + " " + error.Message);
+                        $('#spErrorCep').text(xhr.responseJSON.situacao);
+                        $("#imgcep").attr('src', "../static/img/error.png");
+                        cepOK = false;
+                        $('#btnCalc').prop('disabled', true);
+                    });
+
+                if (cepOK && cpfOK) {
+                    alert(1);
+                    $('#btnCalc').removeAttr("disabled");
+                }
+                else {
+                    $('#btnCalc').prop('disabled', true);
+                }
+              });
+
+              $("#txtCPF").blur(function(){
+                var link ="https://anapaulabim.pythonanywhere.com/cpf/"+$(this).val();
+                //alert(link);
+                $.get(link, function(data, status){
+                    //alert("Data: " + data.situacao + "\nStatus: " + status);
+                    if (status == "success") {
+                        //alert($("#imgcep").src);
+                        $("#imgcpf").attr('src', "../static/img/suss.jpg"); 
+                        $('#spErrorCpf').innerText = "";
+                        cpfOK = true;
+                        if (cepOK && cpfOK) {
+                            $('#btnCalc').removeAttr("disabled");
+                        }
+                    }
+                  }).fail(function(xhr, status, error) {
+                    $('#spErrorCpf').text(xhr.responseJSON.situacao);
+                    $("#imgcpf").attr('src', "../static/img/error.png");
+                    cpfOK = false;
+                    $('#btnCalc').prop('disabled', true);
+                });
+                if (cepOK && cpfOK) {
+                    $('#btnCalc').removeAttr("disabled");
+                }
+                else {
+                    $('#btnCalc').prop('disabled', true);
+                }
+              });
+              $("#btnCalc").click(function(){
+                var men = $("#txtMen").val();
+                if (men == "") {
+                    men = "0";
+                }
+                var women = $("#txtWomen").val();
+                if (women == "") {
+                    women = "0";
+                }
+                var children = $("#txtChildren").val();
+                if (children == "") {
+                    children = "0";
+                }
+                var time = $("#txtTime").val();
+                if (time == "") {
+                    time = "4";
+                }
+                var drinks = $("#drpDrinks").val();
+                if (drinks == "") {
+                    drinks = "true";
+                }
+    
+
+                var link ="https://anapaulabim.pythonanywhere.com/bbq/"+men+"/"+women+"/"+children+"/"+drinks+"/"+time;
+                //alert(link);
+                $.get(link, function(data, status){
+                    if (status == "success") {
+                        var result = data;
+                        $('#vlConv').text(result.total_convidados);
+                        $('#vlCarne').text(result.carnes.bovino + "Kg");
+                        $('#vlRef').text(result.bebidas.cervejas_litros + " litros");
+                        $('#vlFrango').text(result.carnes.frango + "Kg");
+                        $('#vlCerv').text(result.bebidas.refrigerante_litros + " litros");
+                        $('#vlProco').text(result.carnes.porco + "Kg");
+                        $('#vlLing').text(result.carnes.linguica + "Kg");
+                        $('#tbResult').show();
+                        //alert($("#imgcep").src);
+                        //$("#imgcpf").attr('src', "img/succ.png"); ;
+                    }
+                  }).fail(function(xhr, status, error) {
+                    $('#tbResult').hide();
+                });
+
+
+                /*$.ajax({
+                    url: link,
+                    type: 'GET',
+                    dataType: 'json',
+            
+                })
+                .done(function() {
+                    console.log("success");
+                    var resposta = JSON.parse(data);
+                    alert(resposta);
+                })
+                .fail(function() {
+                    console.log("error");
+                })
+                .always(function() {
+                    console.log("complete");
+                });*/
+              });
+
+              $("#txtCEP").keypress(function (e){
+                var charCode = (e.which) ? e.which : e.keyCode;
+                if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                  return false;
+                }
+              });
+              $("#txtCPF").keypress(function (e){
+                var charCode = (e.which) ? e.which : e.keyCode;
+                if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                  return false;
+                }
+              });
+              $("#txtMen").keypress(function (e){
+                var charCode = (e.which) ? e.which : e.keyCode;
+                if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                  return false;
+                }
+              });
+              $("#txtWomen").keypress(function (e){
+                var charCode = (e.which) ? e.which : e.keyCode;
+                if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                  return false;
+                }
+              });
+              $("#txtChildren").keypress(function (e){
+                var charCode = (e.which) ? e.which : e.keyCode;
+                if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                  return false;
+                }
+              });
+              $("#txtTime").keypress(function (e){
+                var charCode = (e.which) ? e.which : e.keyCode;
+                if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                  return false;
+                }
+              });
+        </script>   
+    </BODY>
+</HTML>
